@@ -1,0 +1,671 @@
+﻿-- phpMyAdmin SQL Dump
+-- version 4.1.6
+-- http://www.phpmyadmin.net
+--
+-- Host: 127.0.0.1
+-- Generation Time: 
+-- Server version: 5.6.16
+-- PHP Version: 5.5.9
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+
+--
+-- Database: `stock_db2`
+--
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `borrow`
+--
+
+CREATE TABLE IF NOT EXISTS `borrow` (
+  `BORROW_ID` int(11) NOT NULL,
+  `BORROW_CODE` varchar(45) DEFAULT NULL,
+  `MATERIAL_ID` int(11) DEFAULT NULL,
+  `UNIT` int(11) DEFAULT NULL,
+  `REMARK` varchar(255) DEFAULT NULL,
+  `USER_ID` int(11) DEFAULT NULL,
+  `BORROW_DATE` datetime DEFAULT NULL,
+  `STATUS_ID` int(11) DEFAULT NULL,
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `CREATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `IS_CANCEL` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`BORROW_ID`),
+  KEY `FK_BOR_MATERIAL_ID_idx` (`MATERIAL_ID`),
+  KEY `FK_BOR_USER_ID_idx` (`USER_ID`),
+  KEY `FK_BOR_STATUS_ID_idx` (`STATUS_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `department`
+--
+
+CREATE TABLE IF NOT EXISTS `department` (
+  `DEPARTMENT_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `DEPARTMENT_CODE` varchar(20) NOT NULL COMMENT 'รหัสหน่วยงาน',
+  `DEPARTMENT_NAME` varchar(255) NOT NULL COMMENT 'ชื่อหน่วยงาน',
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`DEPARTMENT_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- dump ตาราง `department`
+--
+
+INSERT INTO `department` (`DEPARTMENT_ID`, `DEPARTMENT_CODE`, `DEPARTMENT_NAME`, `CREATE_DATE`, `CREATE_USER_ID`, `UPDATE_DATE`, `UPDATE_USER_ID`, `IS_CANCEL`) VALUES
+(1, '0005', 'สาขา วิทยาการคอมพิวเตอร์', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `document`
+--
+
+CREATE TABLE IF NOT EXISTS `document` (
+  `DOCUMENT_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `DOCUMENT_CODE` varchar(20) NOT NULL COMMENT 'รหัสเอกสาร',
+  `COMPANY_NAME` varchar(255) NOT NULL COMMENT 'ชื่อเอกสาร',
+  `DOCUMENT_DATE` date NOT NULL,
+  `MATERIAL_ID` int(11) NOT NULL,
+  `USER_ID` int(11) NOT NULL,
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`DOCUMENT_ID`),
+  KEY `FK_DOC_MATERIAL_ID_idx` (`MATERIAL_ID`),
+  KEY `FK_DOC_USER_ID_idx` (`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `material`
+--
+
+CREATE TABLE IF NOT EXISTS `material` (
+  `MATERIAL_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `MATERIAL_CODE` varchar(20) NOT NULL COMMENT 'รหัสวัสดุ',
+  `MATERIAL_NAME` varchar(255) NOT NULL COMMENT 'ชื่อวัสดุ',
+  `MATERIAL_TYPE_ID` int(11) NOT NULL COMMENT 'ประเภทวัสดุPK',
+  `MATERIAL_DETAIL` text NOT NULL COMMENT 'รายละเอียด',
+  `MATERIAL_UNIT_ID` int(11) NOT NULL COMMENT 'หน่วยPK',
+  `MATERIAL_PRICE` decimal(22,2) NOT NULL COMMENT 'ราคา',
+  `MATERIAL_BALANCE` int(11) NOT NULL COMMENT 'ยอดคงเหลือ',
+  `MATERIAL_STORE_ID` int(11) NOT NULL COMMENT 'สถานที่เก็บ',
+  `DEPARTMENT_ID` int(11) NOT NULL COMMENT 'หน่วยงานPK',
+  `MONEY_TYPE_ID` int(11) NOT NULL COMMENT 'ประเภทเงินPK',
+  `SCIENCE_ID` int(11) NOT NULL COMMENT 'วิชา PK',
+  `STORE_ID` int(11) NOT NULL,
+  `BUDGET_YEAR` int(4) NOT NULL COMMENT 'ปีงบประมาณ',
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`MATERIAL_ID`),
+  KEY `FK_STORE_ID_idx` (`STORE_ID`),
+  KEY `FK_DEPARTMENT_ID_idx` (`DEPARTMENT_ID`),
+  KEY `FK_MATERIAL_TYPE_ID_idx` (`MATERIAL_TYPE_ID`),
+  KEY `FK_MATERIAL_UNIT_ID_idx` (`MATERIAL_UNIT_ID`),
+  KEY `FK_MONEY_TYPE_ID_idx` (`MONEY_TYPE_ID`),
+  KEY `FK_SCIENCE_ID_idx` (`SCIENCE_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- dump ตาราง `material`
+--
+
+INSERT INTO `material` (`MATERIAL_ID`, `MATERIAL_CODE`, `MATERIAL_NAME`, `MATERIAL_TYPE_ID`, `MATERIAL_DETAIL`, `MATERIAL_UNIT_ID`, `MATERIAL_PRICE`, `MATERIAL_BALANCE`, `MATERIAL_STORE_ID`, `DEPARTMENT_ID`, `MONEY_TYPE_ID`, `SCIENCE_ID`, `STORE_ID`, `BUDGET_YEAR`, `CREATE_DATE`, `CREATE_USER_ID`, `UPDATE_DATE`, `UPDATE_USER_ID`, `IS_CANCEL`) VALUES
+(1, '0001', 'ดินสอ', 2, 'ดินสอสีดำ', 3, '100.00', 0, 0, 1, 1, 1, 1, 2014, '0000-00-00 00:00:00', 0, '2014-11-20 15:15:19', 5, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `material_store`
+--
+
+CREATE TABLE IF NOT EXISTS `material_store` (
+  `MATERIAL_STORE_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `MATERIAL_STORE_CODE` varchar(20) NOT NULL COMMENT 'รหัสคลังวัสดุ',
+  `MATERIAL_STORE_NAME` varchar(255) NOT NULL COMMENT 'ชื่อคลังวัสดุ',
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`MATERIAL_STORE_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `material_type`
+--
+
+CREATE TABLE IF NOT EXISTS `material_type` (
+  `MATERIAL_TYPE_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `MATERIAL_TYPE_CODE` varchar(20) NOT NULL COMMENT 'รหัสประเภทวัสดุ',
+  `MATERIAL_TYPE_NAME` varchar(255) NOT NULL COMMENT 'ชื่อประเภทวัสดุ',
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`MATERIAL_TYPE_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- dump ตาราง `material_type`
+--
+
+INSERT INTO `material_type` (`MATERIAL_TYPE_ID`, `MATERIAL_TYPE_CODE`, `MATERIAL_TYPE_NAME`, `CREATE_DATE`, `CREATE_USER_ID`, `UPDATE_DATE`, `UPDATE_USER_ID`, `IS_CANCEL`) VALUES
+(1, '0001', 'วัสดุสำนักงาน', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(2, '0002', 'วัสดุสิ้นเปลือง', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `material_unit`
+--
+
+CREATE TABLE IF NOT EXISTS `material_unit` (
+  `MATERIAL_UNIT_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `MATERIAL_UNIT_CODE` varchar(255) NOT NULL COMMENT 'รหัสหน่วยนับ',
+  `MATERIAL_UNIT_NAME` varchar(255) NOT NULL COMMENT 'ชื่อหน่วยนับ',
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`MATERIAL_UNIT_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
+
+--
+-- dump ตาราง `material_unit`
+--
+
+INSERT INTO `material_unit` (`MATERIAL_UNIT_ID`, `MATERIAL_UNIT_CODE`, `MATERIAL_UNIT_NAME`, `CREATE_DATE`, `CREATE_USER_ID`, `UPDATE_DATE`, `UPDATE_USER_ID`, `IS_CANCEL`) VALUES
+(1, '0001', 'ชิ้น', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(2, '0002', 'อัน', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(3, '0003', 'แท่ง', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `menu_page`
+--
+
+CREATE TABLE IF NOT EXISTS `menu_page` (
+  `MENU_PAGE_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `MENU_PAGE_CODE` varchar(20) NOT NULL COMMENT 'รหัสหน้าการแสดงผลวัสดุ',
+  `MENU_PAGE_NAME` varchar(255) NOT NULL COMMENT 'ชื่อหน้าการแสดงผลวัสดุ',
+  `MENU_PAGE_LINK` varchar(255) DEFAULT NULL,
+  `PARENT_ID` int(11) DEFAULT NULL,
+  `ICON` varchar(255) NOT NULL,
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`MENU_PAGE_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=26 ;
+
+--
+-- dump ตาราง `menu_page`
+--
+
+INSERT INTO `menu_page` (`MENU_PAGE_ID`, `MENU_PAGE_CODE`, `MENU_PAGE_NAME`, `MENU_PAGE_LINK`, `PARENT_ID`, `ICON`, `CREATE_DATE`, `CREATE_USER_ID`, `UPDATE_DATE`, `UPDATE_USER_ID`, `IS_CANCEL`) VALUES
+(2, '0100', 'วัสดุ', '#', NULL, '<i class="fa fa-fw fa-file"></i>', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(3, '0200', 'ผู้ใช้งาน', '#', NULL, '<i class="fa fa-user fa-fw"></i>', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(4, '0102', 'วัสดุ', 'material/', 2, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(5, '0300', 'ตั้งค่า', '#', NULL, '<i class="fa fa-wrench fa-fw"></i>', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(6, '0400', 'Private', '#', NULL, '<i class="fa fa-user fa-fw"></i>', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(7, '0103', 'รายการเบิก', 'request/', 2, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(8, '0104', 'รายการคืน', 'return/', 2, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(10, '0201', 'กลุ่มผู้ใช้งาน', 'user_group/', 3, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(11, '0202', 'ผู้ใช้งาน', 'user/', 3, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(12, '0301', 'หน่วยงาน', 'department/', 2, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(13, '0302', 'คลังวัสดุ', 'store/', 5, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(14, '0107', 'รายการยืม', 'borrow/', 2, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(15, '0304', 'หน่วย', 'material_unit/', 5, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(16, '0305', 'ประเภทเงิน', 'money_type/', 5, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(17, '0306', 'ประเภทวัสดุ', 'material_type/', 5, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(18, '0307', 'เอกสาร', 'document/', 5, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(19, '0308', 'สถานะ', 'status/', 5, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(20, '0303', 'วิชา', 'science/', 5, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(21, '0401', 'โปรแกรม', 'menu_page/', 6, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(23, '0203', 'สิทธ์การเข้าถึง', 'permission/', 3, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(24, '0000', 'หน้าหลัก', 'dashboard/', NULL, '<i class="fa fa-fw fa-dashboard"></i>', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(25, '0106', 'รายการรับ', 'with_draw/', 2, '', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `money_type`
+--
+
+CREATE TABLE IF NOT EXISTS `money_type` (
+  `MONEY_TYPE_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `MONEY_TYPE_CODE` varchar(20) NOT NULL COMMENT 'รหัสประเภทเงิน',
+  `MONEY_TYPE_NAME` varchar(255) NOT NULL COMMENT 'ชื่อประเภทเงิน',
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`MONEY_TYPE_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+--
+-- dump ตาราง `money_type`
+--
+
+INSERT INTO `money_type` (`MONEY_TYPE_ID`, `MONEY_TYPE_CODE`, `MONEY_TYPE_NAME`, `CREATE_DATE`, `CREATE_USER_ID`, `UPDATE_DATE`, `UPDATE_USER_ID`, `IS_CANCEL`) VALUES
+(1, '0001', 'เงินสด', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(2, '0002', 'เช็ค', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `request`
+--
+
+CREATE TABLE IF NOT EXISTS `request` (
+  `REQUEST_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `REQUEST_CODE` varchar(20) NOT NULL,
+  `USER_ID` int(11) NOT NULL,
+  `STATUS_ID` int(11) NOT NULL,
+  `MATERIAL_ID` int(11) NOT NULL,
+  `UNIT` int(11) NOT NULL,
+  `REQUEST_DATE` date NOT NULL,
+  `CREATE_DATE` datetime NOT NULL,
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`REQUEST_ID`),
+  KEY `FK_REQUEST_STATUS_ID_idx` (`STATUS_ID`),
+  KEY `FK_USER_ID_idx` (`USER_ID`),
+  KEY `FK_MATERIAL_ID_idx` (`MATERIAL_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `return`
+--
+
+CREATE TABLE IF NOT EXISTS `return` (
+  `RETURN_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `RETURN_CODE` varchar(20) DEFAULT NULL,
+  `RETURN_NAME` varchar(255) DEFAULT NULL,
+  `UNIT` int(11) DEFAULT NULL,
+  `REMARK` varchar(255) DEFAULT NULL,
+  `BORROW_ID` int(11) DEFAULT NULL,
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `CREATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `IS_CANCEL` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`RETURN_ID`),
+  KEY `FK_RET_BORROW_ID_idx` (`BORROW_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `science`
+--
+
+CREATE TABLE IF NOT EXISTS `science` (
+  `SCIENCE_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `SCIENCE_CODE` varchar(20) NOT NULL COMMENT 'รหัสวิชา',
+  `SCIENCE_NAME` varchar(255) NOT NULL COMMENT 'ชื่อวิชา',
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`SCIENCE_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- dump ตาราง `science`
+--
+
+INSERT INTO `science` (`SCIENCE_ID`, `SCIENCE_CODE`, `SCIENCE_NAME`, `CREATE_DATE`, `CREATE_USER_ID`, `UPDATE_DATE`, `UPDATE_USER_ID`, `IS_CANCEL`) VALUES
+(1, '0001', 'วิชาสังคม', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `status`
+--
+
+CREATE TABLE IF NOT EXISTS `status` (
+  `STATUS_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `STATUS_CODE` varchar(20) DEFAULT NULL,
+  `STATUS_NAME` varchar(255) DEFAULT NULL,
+  `CREATE_USER_ID` int(11) DEFAULT NULL,
+  `CREATE_DATE` datetime DEFAULT NULL,
+  `UPDATE_USER_ID` int(11) DEFAULT NULL,
+  `UPDATE_DATE` datetime DEFAULT NULL,
+  `IS_CANCEL` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`STATUS_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
+
+--
+-- dump ตาราง `status`
+--
+
+INSERT INTO `status` (`STATUS_ID`, `STATUS_CODE`, `STATUS_NAME`, `CREATE_USER_ID`, `CREATE_DATE`, `UPDATE_USER_ID`, `UPDATE_DATE`, `IS_CANCEL`) VALUES
+(2, '0001', 'รออนุมัติเบิก', NULL, NULL, 1, '2014-11-20 17:16:53', NULL),
+(3, '0002', 'อนุมัติเบิกแล้ว', NULL, NULL, 1, '2014-11-20 17:17:36', NULL),
+(4, '0000', 'กำลังทำรายการ', 1, '2014-12-20 08:36:36', NULL, NULL, 0),
+(5, '0003', 'บันทึกแล้ว', 1, '2014-12-20 08:37:20', NULL, NULL, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `store`
+--
+
+CREATE TABLE IF NOT EXISTS `store` (
+  `STORE_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `STORE_CODE` varchar(20) NOT NULL COMMENT 'รหัสที่เก็บุวัสดุ',
+  `STORE_NAME` varchar(255) NOT NULL COMMENT 'ชื่อที่เก็บุวัสดุุ',
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`STORE_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- dump ตาราง `store`
+--
+
+INSERT INTO `store` (`STORE_ID`, `STORE_CODE`, `STORE_NAME`, `CREATE_DATE`, `CREATE_USER_ID`, `UPDATE_DATE`, `UPDATE_USER_ID`, `IS_CANCEL`) VALUES
+(1, '01', 'คลังหลัก', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `trn_user_group`
+--
+
+CREATE TABLE IF NOT EXISTS `trn_user_group` (
+  `TRN_USER_GROUP_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `USER_ID` int(11) NOT NULL,
+  `USER_GROUP_ID` int(11) NOT NULL,
+  `TRN_USER_GROUP_SEQ` int(11) NOT NULL,
+  PRIMARY KEY (`TRN_USER_GROUP_ID`),
+  KEY `TRN_USER_GROUP_USER_ID_FK_idx` (`USER_GROUP_ID`),
+  KEY `FK_TRN_USER_GROUP_USER_ID_idx` (`USER_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
+
+--
+-- dump ตาราง `trn_user_group`
+--
+
+INSERT INTO `trn_user_group` (`TRN_USER_GROUP_ID`, `USER_ID`, `USER_GROUP_ID`, `TRN_USER_GROUP_SEQ`) VALUES
+(2, 1, 4, 0),
+(6, 4, 1, 0),
+(7, 5, 6, 0),
+(8, 6, 5, 0),
+(9, 7, 7, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `user`
+--
+
+CREATE TABLE IF NOT EXISTS `user` (
+  `USER_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `USER_CODE` varchar(20) NOT NULL COMMENT 'รหัสผู้ใชุ้',
+  `USERNAME` varchar(255) NOT NULL COMMENT 'ชื่อผู้ใช้',
+  `PASSWORD` varchar(64) NOT NULL,
+  `DISPLAY_NAME` varchar(255) NOT NULL,
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`USER_ID`),
+  UNIQUE KEY `USER_CODE_2` (`USER_CODE`),
+  KEY `USER_CODE` (`USER_CODE`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- dump ตาราง `user`
+--
+
+INSERT INTO `user` (`USER_ID`, `USER_CODE`, `USERNAME`, `PASSWORD`, `DISPLAY_NAME`, `CREATE_DATE`, `CREATE_USER_ID`, `UPDATE_DATE`, `UPDATE_USER_ID`, `IS_CANCEL`) VALUES
+(1, '0001', 'test', '06c56a89949d617def52f371c357b6db', 'นาย ทดสอบ นามสมมุติ', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(4, '0002', 'student', 'cd73502828457d15655bbd7a63fb0bc8', 'นาย นักเรียน นามสมมุติ', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(5, '0003', 'procurement', '93aa88d53279ccb3e40713d4396e198f', 'นาย จัดการวัสดุ นามสมมุติ', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(6, '0004', 'teacher', '8d788385431273d11e8b43bb78f3aa41', 'นาย อาจาร์ย นามสมมุติ', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(7, '0005', 'hteacher', 'd27ec1f8e94b96564b27e7fda51a580c', 'นาย หัวหน้าสาขา นามสมมุติ', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `user_group`
+--
+
+CREATE TABLE IF NOT EXISTS `user_group` (
+  `USER_GROUP_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `USER_GROUP_CODE` varchar(20) NOT NULL COMMENT 'รหัสกลุ่มวัสดุ',
+  `USER_GROUP_NAME` varchar(255) NOT NULL COMMENT 'ชื่อกลุ่มวัสดุ',
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`USER_GROUP_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- dump ตาราง `user_group`
+--
+
+INSERT INTO `user_group` (`USER_GROUP_ID`, `USER_GROUP_CODE`, `USER_GROUP_NAME`, `CREATE_DATE`, `CREATE_USER_ID`, `UPDATE_DATE`, `UPDATE_USER_ID`, `IS_CANCEL`) VALUES
+(1, '0002', 'ผู้ใช้งานระบบ', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(4, '0000', 'programmer', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(5, '0003', 'อาจารย์', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(6, '0004', ' เจ้าหน้าที่วัสด', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(7, '0001', 'หัวหน้าสาขา', '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `user_permission`
+--
+
+CREATE TABLE IF NOT EXISTS `user_permission` (
+  `USER_PERMISSION_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `USER_GROUP_ID` int(11) NOT NULL COMMENT 'USER_GROUP_ID',
+  `MENU_PAGE_ID` int(11) NOT NULL COMMENT 'MENU_PAGE_ID',
+  `USER_PERMISSION_SEQ` int(11) NOT NULL,
+  `IS_ADD` tinyint(1) NOT NULL DEFAULT '1',
+  `IS_EDIT` tinyint(1) NOT NULL DEFAULT '1',
+  `IS_DELETE` tinyint(1) NOT NULL DEFAULT '1',
+  `CREATE_DATE` datetime NOT NULL COMMENT 'วันที่สร้าง record',
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `IS_CANCEL` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`USER_PERMISSION_ID`),
+  KEY `FK_UP_USER_GROUP_idx` (`USER_GROUP_ID`),
+  KEY `FK_UP_MENU_PAGE_idx` (`MENU_PAGE_ID`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=215 ;
+
+--
+-- dump ตาราง `user_permission`
+--
+
+INSERT INTO `user_permission` (`USER_PERMISSION_ID`, `USER_GROUP_ID`, `MENU_PAGE_ID`, `USER_PERMISSION_SEQ`, `IS_ADD`, `IS_EDIT`, `IS_DELETE`, `CREATE_DATE`, `CREATE_USER_ID`, `UPDATE_DATE`, `UPDATE_USER_ID`, `IS_CANCEL`) VALUES
+(155, 4, 7, 4, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(156, 4, 4, 0, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(157, 4, 8, 2, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(159, 4, 25, 3, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(160, 4, 10, 5, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(161, 4, 11, 6, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(162, 4, 23, 7, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(163, 4, 12, 8, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(164, 4, 13, 9, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(165, 4, 14, 1, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(166, 4, 15, 10, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(167, 4, 16, 11, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(168, 4, 17, 12, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(169, 4, 18, 13, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(170, 4, 19, 14, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(171, 4, 20, 15, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(172, 4, 21, 16, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(173, 5, 4, 0, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(174, 5, 7, 1, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(175, 5, 8, 2, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(176, 5, 25, 3, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(177, 5, 14, 4, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(178, 6, 4, 0, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(179, 6, 7, 1, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(180, 6, 8, 2, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(181, 6, 25, 3, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(182, 6, 14, 4, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(183, 6, 10, 5, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(184, 6, 11, 6, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(185, 6, 23, 7, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(195, 1, 7, 0, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(196, 1, 25, 1, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(197, 1, 14, 2, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(198, 1, 8, 3, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(199, 7, 4, 0, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(200, 7, 7, 1, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(201, 7, 8, 2, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(202, 7, 25, 3, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(203, 7, 14, 4, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(204, 7, 10, 5, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(205, 7, 11, 6, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(206, 7, 23, 7, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(207, 7, 12, 8, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(208, 7, 13, 9, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(209, 7, 20, 10, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(210, 7, 15, 11, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(211, 7, 16, 12, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(212, 7, 17, 13, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(213, 7, 18, 14, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0),
+(214, 7, 19, 15, 1, 1, 1, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- โครงสร้างตาราง `with_draw`
+--
+
+CREATE TABLE IF NOT EXISTS `with_draw` (
+  `WITH_DRAW_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `WITH_DRAW_CODE` varchar(20) DEFAULT NULL,
+  `MATERIAL_ID` int(11) NOT NULL,
+  `UNIT` int(11) DEFAULT NULL,
+  `REMARK` varchar(255) DEFAULT NULL,
+  `USER_ID` int(11) NOT NULL,
+  `WITH_DRAW_DATE` date DEFAULT NULL,
+  `STATUS_ID` int(11) NOT NULL,
+  `CREATE_USER_ID` int(11) NOT NULL,
+  `CREATE_DATE` datetime NOT NULL,
+  `UPDATE_USER_ID` int(11) NOT NULL,
+  `UPDATE_DATE` datetime NOT NULL,
+  `IS_CANCEL` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`WITH_DRAW_ID`),
+  KEY `FK_WITH_MATERIAL_ID_idx` (`MATERIAL_ID`),
+  KEY `FK_WITH_USER_ID_idx` (`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `borrow`
+--
+ALTER TABLE `borrow`
+  ADD CONSTRAINT `FK_BOR_MATERIAL_ID` FOREIGN KEY (`MATERIAL_ID`) REFERENCES `material` (`MATERIAL_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_BOR_STATUS_ID` FOREIGN KEY (`STATUS_ID`) REFERENCES `status` (`STATUS_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_BOR_USER_ID` FOREIGN KEY (`USER_ID`) REFERENCES `user` (`USER_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `document`
+--
+ALTER TABLE `document`
+  ADD CONSTRAINT `FK_DOC_MATERIAL_ID` FOREIGN KEY (`MATERIAL_ID`) REFERENCES `material` (`MATERIAL_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_DOC_USER_ID` FOREIGN KEY (`USER_ID`) REFERENCES `user` (`USER_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `material`
+--
+ALTER TABLE `material`
+  ADD CONSTRAINT `FK_DEPARTMENT_ID` FOREIGN KEY (`DEPARTMENT_ID`) REFERENCES `department` (`DEPARTMENT_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_MATERIAL_TYPE_ID` FOREIGN KEY (`MATERIAL_TYPE_ID`) REFERENCES `material_type` (`MATERIAL_TYPE_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_MATERIAL_UNIT_ID` FOREIGN KEY (`MATERIAL_UNIT_ID`) REFERENCES `material_unit` (`MATERIAL_UNIT_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_MONEY_TYPE_ID` FOREIGN KEY (`MONEY_TYPE_ID`) REFERENCES `money_type` (`MONEY_TYPE_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_SCIENCE_ID` FOREIGN KEY (`SCIENCE_ID`) REFERENCES `science` (`SCIENCE_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_STORE_ID` FOREIGN KEY (`STORE_ID`) REFERENCES `store` (`STORE_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `request`
+--
+ALTER TABLE `request`
+  ADD CONSTRAINT `FK_REQ_MATERIAL_ID` FOREIGN KEY (`MATERIAL_ID`) REFERENCES `material` (`MATERIAL_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_REQ_STATUS_ID` FOREIGN KEY (`STATUS_ID`) REFERENCES `status` (`STATUS_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_REQ_USER_ID` FOREIGN KEY (`USER_ID`) REFERENCES `user` (`USER_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `return`
+--
+ALTER TABLE `return`
+  ADD CONSTRAINT `FK_RET_BORROW_ID` FOREIGN KEY (`BORROW_ID`) REFERENCES `borrow` (`BORROW_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `trn_user_group`
+--
+ALTER TABLE `trn_user_group`
+  ADD CONSTRAINT `FK_TRN_USER_GROUP_USER_GROUP_ID` FOREIGN KEY (`USER_GROUP_ID`) REFERENCES `user_group` (`USER_GROUP_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_TRN_USER_GROUP_USER_ID` FOREIGN KEY (`USER_ID`) REFERENCES `user` (`USER_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `user_permission`
+--
+ALTER TABLE `user_permission`
+  ADD CONSTRAINT `FK_UP_MENU_PAGE` FOREIGN KEY (`MENU_PAGE_ID`) REFERENCES `menu_page` (`MENU_PAGE_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_UP_USER_GROUP` FOREIGN KEY (`USER_GROUP_ID`) REFERENCES `user_group` (`USER_GROUP_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `with_draw`
+--
+ALTER TABLE `with_draw`
+  ADD CONSTRAINT `FK_WITH_MATERIAL_ID` FOREIGN KEY (`MATERIAL_ID`) REFERENCES `material` (`MATERIAL_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_WITH_USER_ID` FOREIGN KEY (`USER_ID`) REFERENCES `user` (`USER_ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
